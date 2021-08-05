@@ -30,6 +30,7 @@ If you're using Docker, you should save this file as `.env-local-docker` in the 
 CV_DB_ROOT_PASS="root"
 CV_MYSQLHOST="db"
 CV_IMPORT_SENTENCES="true"
+CV_IMPORT_ONLY_LANGUAGES='["en"]'
 ```
 
 ### Setup steps
@@ -47,6 +48,9 @@ This is going to:
 - Launch an s3proxy instance to store files locally and avoid going through setting up AWS S3.
 - Mount the project using a Docker volume to allow reflecting changes to the codebase directly to the container.
 - Launch `common-voice` server
+- If `CV_IMPORT_SENTENCES` is set all sentences are imported
+
+The import step takes some time so you might want to disable this step after an initial import. `CV_IMPORT_ONLY_LANGUAGES` can be used to restrict the set of languages imported.
 
 You can visit the website at [http://localhost:9000](http://localhost:9000).
 

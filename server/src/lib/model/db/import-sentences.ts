@@ -5,6 +5,7 @@ import { PassThrough } from 'stream';
 import promisify from '../../../promisify';
 import { hashSentence } from '../../utility';
 import { redis, useRedis } from '../../redis';
+import { getConfig } from "../../../config-helper"
 
 const CWD = process.cwd();
 const SENTENCES_FOLDER = path.resolve(CWD, 'server/data/');
@@ -152,9 +153,17 @@ export async function importSentences(pool: any) {
     (await useRedis) ? await redis.get('sentences-version') : 0
   );
   const version = ((oldVersion || 0) + 1) % 256; //== max size of version column
+  const requestedLocales = getConfig().IMPORT_ONLY_LANGUAGES;
+  if (requestedLocales) {
+    print("Requested locales:", requestedLocales);
+  }
+  const shouldImportLocale = (locale: string) => {
+    if (!requestedLocales) return true;
+    return requestedLocales.includes(locale);
+  }
   const locales = ((await new Promise(resolve =>
     fs.readdir(SENTENCES_FOLDER, (_, names) => resolve(names))
-  )) as string[]).filter(name => name !== 'LICENSE');
+  )) as string[]).filter(name => name !== 'LICENSE' && shouldImportLocale(name));
 
   print('locales', locales.join(','));
 

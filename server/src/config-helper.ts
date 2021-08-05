@@ -42,6 +42,8 @@ export type CommonVoiceConfig = {
   };
   BASKET_API_KEY?: string;
   IMPORT_SENTENCES: boolean;
+  /** undefined -> import all languages, set of locale identifiers -> import only those languages */
+  IMPORT_ONLY_LANGUAGES?: string[];
   REDIS_URL: string;
   KIBANA_URL: string;
   KIBANA_PREFIX: string;
@@ -94,6 +96,7 @@ const BASE_CONFIG: CommonVoiceConfig = {
     CLIENT_SECRET: configEntry('CV_AUTH0_CLIENT_SECRET', ''),
   },
   IMPORT_SENTENCES: configEntry('CV_IMPORT_SENTENCES', true, castBoolean),
+  IMPORT_ONLY_LANGUAGES: configEntry('CV_IMPORT_ONLY_LANGUAGES', null, (v) => {console.log("wtf", v); return castJson(v)}),
   REDIS_URL: configEntry('CV_REDIS_URL', null),
   KIBANA_URL: configEntry('CV_KIBANA_URL', null),
   KIBANA_PREFIX: configEntry('CV_KIBANA_PREFIX', '/_plugin/kibana'),
